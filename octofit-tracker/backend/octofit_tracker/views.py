@@ -1,5 +1,8 @@
 from rest_framework import viewsets
-from .models import Team, User, Activity, Workout, Leaderboard
+from .models import Team, Activity, Workout, Leaderboard
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 from .serializers import TeamSerializer, UserSerializer, ActivitySerializer, WorkoutSerializer, LeaderboardSerializer
 
 class TeamViewSet(viewsets.ModelViewSet):
