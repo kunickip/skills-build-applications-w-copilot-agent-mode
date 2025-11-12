@@ -1,35 +1,26 @@
-from djongo import models
+# models.py
+
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Team(models.Model):
-	name = models.CharField(max_length=100, unique=True)
-	class Meta:
-		db_table = 'teams'
-
-class User(models.Model):
-	name = models.CharField(max_length=100)
-	email = models.EmailField(unique=True)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='members')
-	class Meta:
-		db_table = 'users'
+    name = models.CharField(max_length=100)
+    members = models.ManyToManyField(User, related_name='teams')
 
 class Activity(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
-	type = models.CharField(max_length=50)
-	duration = models.IntegerField()  # minutes
-	calories = models.IntegerField()
-	date = models.DateField()
-	class Meta:
-		db_table = 'activities'
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    activity_type = models.CharField(max_length=100)
+    duration = models.IntegerField()  # duration in minutes
+    date = models.DateField()
 
 class Workout(models.Model):
-	name = models.CharField(max_length=100)
-	description = models.TextField()
-	difficulty = models.CharField(max_length=50)
-	class Meta:
-		db_table = 'workouts'
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    workout_type = models.CharField(max_length=100)
+    intensity = models.CharField(max_length=50)
+    date = models.DateField()
 
 class Leaderboard(models.Model):
-	team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='leaderboard')
-	points = models.IntegerField()
-	class Meta:
-		db_table = 'leaderboard'
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    score = models.IntegerField()
